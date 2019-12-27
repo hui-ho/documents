@@ -39,5 +39,6 @@ module.exports = {
         ],
         sidebar: 'auto',
         sidebarDepth: 2,
-    }
+    },
+    plugins: ['@vuepress/back-to-top'],
 }

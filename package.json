@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/hui-ho/documents#readme",
   "devDependencies": {
+    "@vuepress/plugin-back-to-top": "^1.2.0",
     "vuepress": "^1.2.0"
   }
 }
