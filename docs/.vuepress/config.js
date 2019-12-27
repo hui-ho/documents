@@ -1,6 +1,7 @@
 module.exports = {
     title: 'DevProj',
     description: '开发、学习文档集',
+    base: '/documents/',
 
     locales: {
         '/': {
