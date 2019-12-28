@@ -170,3 +170,98 @@ Client：Close.
 ```
 
 ### WebSocket 服务
+
+#### 服务端代码
+
+`server.php`：
+
+```php
+<?php
+
+use Swoole\WebSocket\Server;
+
+require_once './vendor/autoload.php';
+
+// 初始化 WebSocket 服务器，在本地监听 8001 端口
+$server = new Server("127.0.0.1", 8001);
+
+// 建立连接时触发
+$server->on('open', function (Server $server, $request) {
+    echo "server: handshake success with fd{$request->fd}\n";
+});
+
+// 收到消息时出发推送
+$server->on('message', function (Server $server, $frame) {
+    echo "receive from {$frame->fd}:{$frame->data},opcode:{$frame->opcode},fin:{$frame->finish}\n";
+    $server->push($frame->fd, "this is server");
+});
+
+// 关闭 WebSocket 连接时触发
+$server->on('close', function ($ser, $fd) {
+    echo "client {$fd} closed\n";
+});
+
+// 启动 WebSocket 服务器
+$server->start();
+```
+
+#### 客户端
+
+`client.html`：
+
+```html
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Chat Client</title>
+</head>
+
+<body>
+    <script>
+        window.onload = function () {
+            var nick = prompt("Enter your nickname");
+            var input = document.getElementById("input");
+            input.focus();
+
+            // 初始化客户端套接字并建立连接
+            var socket = new WebSocket("ws://localhost:8001");
+
+            // 连接建立时触发
+            socket.onopen = function (event) {
+                console.log("Connection open ...");
+            }
+
+            // 接收到服务端推送时执行
+            socket.onmessage = function (event) {
+                var msg = event.data;
+                var node = document.createTextNode(msg);
+                var div = document.createElement("div");
+                div.appendChild(node);
+                document.body.insertBefore(div, input);
+                input.scrollIntoView();
+            };
+
+            // 连接关闭时触发
+            socket.onclose = function (event) {
+                console.log("Connection closed ...");
+            }
+
+            input.onchange = function () {
+                var msg = nick + ": " + input.value;
+                // 将输入框变更信息通过 send 方法发送到服务器
+                socket.send(msg);
+                input.value = "";
+            };
+        }
+    </script>
+    <input id="input" style="width: 100%;">
+</body>
+
+</html>
+```
+
+#### 测试服务
+
+通过浏览器访问 `http://localhost/client.html` 进行测试。
