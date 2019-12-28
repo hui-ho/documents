@@ -33,6 +33,11 @@ module.exports = {
                             { text: 'Laravel', link: '/php/framework/laravel' },
                         ]
                     },
+                    {
+                        text: 'Swoole', items: [
+                            { text: '基础', link: '/php/swoole/basic' },
+                        ]
+                    },
                 ]
             },
             {
