@@ -35,7 +35,14 @@ module.exports = {
                     },
                 ]
             },
-
+            {
+                text: '容器',
+                ariaLabel: 'container',
+                items: [
+                    { text: 'Docker', link: '/container/docker' },
+                    { text: 'Docker Swarm', link: '/container/docker_swarm' },
+                ]
+            },
         ],
         sidebar: 'auto',
         sidebarDepth: 2,
